@@ -2,57 +2,56 @@ import yt_dlp
 from streamlit import title
 from ytmusicapi import YTMusic
 import json
-num=0
-title_list=[]
-play_list_id="PLYDJHBRAlwIZudV3Bg2eg8jNPtw8KYnRh"
-titles=[]
-main="\\\\192.168.100.7\\matus\\Obľúbená-hudba\\"
+
+num = 0
+title_list = []
+play_list_id = "PLYDJHBRAlwIZudV3Bg2eg8jNPtw8KYnRh"
+titles = []
+main = "\\\\192.168.100.7\\matus\\Obľúbená-hudba\\"
 yt = YTMusic()
-playlist=yt.get_playlist(play_list_id,limit=None)
+playlist = yt.get_playlist(play_list_id, limit=None)
 URLS = []
-#print(json.dumps(playlist, indent=4))
+# print(json.dumps(playlist, indent=4))
 
-#for i in playlist['tracks']:
+# for i in playlist['tracks']:
 
-    #print(i['artists'][0]['name'])
-#print(i['thumbnails'])
+# print(i['artists'][0]['name'])
+# print(i['thumbnails'])
 
-c=0
-for i in playlist['tracks']:
-    print("https://music.youtube.com/watch?v="+i['videoId'])
-    print(i['title']+".%(ext)s")
-    titles.append(i['title'])
-    URLS.append("https://music.youtube.com/watch?v="+i['videoId'])
-    c=c+1
+c = 0
+for i in playlist["tracks"]:
+    print("https://music.youtube.com/watch?v=" + i["videoId"])
+    print(i["title"] + ".%(ext)s")
+    titles.append(i["title"])
+    URLS.append("https://music.youtube.com/watch?v=" + i["videoId"])
+    c = c + 1
 
 print(c)
 input("Press Enter to continue...")
-#print(URLS)
+# print(URLS)
 
-for url,title in zip(URLS,titles):
+for url, title in zip(URLS, titles):
     max_pokusov = 3
     pokus = 0
     while pokus < max_pokusov:
         if title in title_list:
-            title=f"{title}{num}"
-            num+=1
+            title = f"{title}{num}"
+            num += 1
         ydl_opts = {
-            'format': 'm4a/bestaudio/best',
-            'outtmpl': f"{main}{title}.%(ext)s" ,
-                'postprocessors': [
-                    {
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'm4a',
-                    },
-                    {
-                        'key': 'FFmpegMetadata'
-                    },
-                    {
-                    'key': 'EmbedThumbnail',  # pridanie plagátu/thumbnailu
-                    'already_have_thumbnail': False
-                    }
+            "format": "m4a/bestaudio/best",
+            "outtmpl": f"{main}{title}.%(ext)s",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "m4a",
+                },
+                {"key": "FFmpegMetadata"},
+                {
+                    "key": "EmbedThumbnail",  # pridanie plagátu/thumbnailu
+                    "already_have_thumbnail": False,
+                },
             ],
-            'writethumbnail': True
+            "writethumbnail": True,
         }
         title_list.append(title)
         try:
