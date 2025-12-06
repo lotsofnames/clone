@@ -38,7 +38,6 @@ for title, url in play_list.items():
             if title in title_set:
                 title = f"{title}{num}"
                 num += 1
-                title_set.add(title)
             if title not in title_set:
                 title_set.add(title)
                 num = 0
