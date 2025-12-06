@@ -6,7 +6,7 @@ title_set = set()
 play_list_id = "PLYDJHBRAlwIY_AmHgSHv7xL-2lZID-EAV"
 
 titles = []
-main = "\\\\192.168.100.7\\matus\\Pain\\"
+main = "\\\\192.168.100.8\\matus\\Pain\\"
 yt = YTMusic()
 playlist = yt.get_playlist(play_list_id, limit=None)
 URLS = []
@@ -20,7 +20,7 @@ URLS = []
 c = 0
 for i in playlist["tracks"]:
     print("https://music.youtube.com/watch?v=" + i["videoId"])
-    print(i["title"] + ".%(ext)s")
+    print(i["title"])
     titles.append(i["title"])
     URLS.append("https://music.youtube.com/watch?v=" + i["videoId"])
     c = c + 1
@@ -28,15 +28,14 @@ for i in playlist["tracks"]:
 print(c)
 input("Press Enter to continue...")
 # print(URLS)
-play_list = {"title": titles, "URLS": URLS}
-for title, url in play_list.items():
+for title, url in zip(titles, URLS):
     max_pokusov = 3
     pokus = 0
     while pokus < max_pokusov:
         num = 0
         while 1:
             if title in title_set:
-                title = f"{title}{num}"
+                title = f"{title}({num})"
                 num += 1
             if title not in title_set:
                 title_set.add(title)
