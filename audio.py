@@ -1,13 +1,12 @@
 import yt_dlp
-from streamlit import title
 from ytmusicapi import YTMusic
-import json
 
-num = 0
-title_list = []
-play_list_id = "PLYDJHBRAlwIZudV3Bg2eg8jNPtw8KYnRh"
+
+title_set = set()
+play_list_id = "PLYDJHBRAlwIY_AmHgSHv7xL-2lZID-EAV"
+
 titles = []
-main = "\\\\192.168.100.7\\matus\\Obľúbená-hudba\\"
+main = "\\\\192.168.100.7\\matus\\Pain\\"
 yt = YTMusic()
 playlist = yt.get_playlist(play_list_id, limit=None)
 URLS = []
@@ -29,14 +28,21 @@ for i in playlist["tracks"]:
 print(c)
 input("Press Enter to continue...")
 # print(URLS)
-
-for url, title in zip(URLS, titles):
+play_list = {"title": titles, "URLS": URLS}
+for title, url in play_list.items():
     max_pokusov = 3
     pokus = 0
     while pokus < max_pokusov:
-        if title in title_list:
-            title = f"{title}{num}"
-            num += 1
+        num = 0
+        while 1:
+            if title in title_set:
+                title = f"{title}{num}"
+                num += 1
+                title_set.add(title)
+            if title not in title_set:
+                title_set.add(title)
+                num = 0
+                break
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "outtmpl": f"{main}{title}.%(ext)s",
@@ -53,7 +59,6 @@ for url, title in zip(URLS, titles):
             ],
             "writethumbnail": True,
         }
-        title_list.append(title)
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
